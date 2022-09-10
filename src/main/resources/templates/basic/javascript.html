@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+
+<!-- 자바스크립트 인라인 사용 전 -->
+<script th:inline="javascript">
+    //" "를 넣어줘야 에러가 안 생김 하지만 age처럼 숫자는 안 해줘도 됨 이런거 하나하나 다 챙겨줘야 한다.
+    //이런 문제가 있다 그 다음에 내추럴 템플릿을 쓰기가 어렵다
+    var username = "[[${user.username}]]";
+    var age = [[${user.age}]];
+
+    //자바스크립트 내추럴 템플릿
+    //지금 이렇게 주석 처리하면 타임리프 주석을 해도 개발자 모드에서 제대로 써지지가 않는다.
+    //하지만 인라인을 사용하면 이런 것들이 해결된다.
+    var username2 = /*[[${user.username}]]*/ "test username";
+
+    //객체
+    //이렇게 하면 toString()이 반환된 것이 var user에 들어간다. 이렇게 쓰면 너무 어렵다 그래서 아래와 같이 inline를 쓴다.
+    var user = [[${user}]];
+</script>
+
+<!-- 자바스크립트 인라인 사용 후 -->
+<script th:inline="javascript">
+    // " " 넣는 것을 타임리프가 다 알아서 해준다.
+    var username = [[${user.username}]];
+    var age = [[${user.age}]];
+
+    //이 덕분에 자바스크립트도 네추럴 테플릿이 가능해진다.
+    var username2 = /*[[${user.username}]]*/ "test username";
+
+    //이제 객체를 json으로 넣어주게 된다.
+    var user = [[${user}]];
+</script>
+
+<!-- 자바스크립트 인라인 each -->
+<script th:inline="javascript">
+
+    /*
+    var user1 = {"username":"UserA","age":10};
+    var user2 = {"username":"UserB","age":20};
+    var user3 = {"username":"UserC","age":30};
+     */
+    [# th:each="user, stat : ${users}"]
+    var user[[${stat.count}]] = [[${user}]];
+    [/]
+
+</script>
+
+</body>
+</html>
